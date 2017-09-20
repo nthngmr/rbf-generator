@@ -1,0 +1,50 @@
+.MainNav {
+  min-height: 55px;
+}
+
+
+
+.MainNav .user-dropdown .nav-link {
+/*  padding-top: 5px;
+  padding-bottom: 5px;*/
+  cursor: pointer;
+}
+
+@media (max-width: 576px) {
+ .user-nav-items {
+    display: block;
+  }
+}
+
+@media (min-width: 576px) {
+ .user-nav-items {
+    display: none;
+  }
+}
+
+.MainNav .avatar {
+  height: 40px;
+  width: 40px;
+  margin: -13px -13px -10px 0px;
+  border-radius: 100px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.MainNav .avatar:hover {
+  border: 2px solid rgba(255, 255, 255, 0.5);
+}
+
+.MainNav .navbar-brand {
+  padding-top: 0px;
+  font-size: 30px;
+}
+
+.MainNav .user-dropdown {
+  left: -110px;
+  top: 70px;
+  position: absolute !important;
+}
+
+.MainNav .brand-logo {
+  width: 150px;
+}
