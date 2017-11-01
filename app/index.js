@@ -6,7 +6,8 @@ const askName = require('inquirer-npm-name');
 const _ = require('lodash');
 const extend = require('deep-extend');
 const mkdirp = require('mkdirp');
-
+const https = require("https");
+const fetch = require("node-fetch");
 
 
 module.exports = class extends Generator {
@@ -21,6 +22,20 @@ module.exports = class extends Generator {
 
     // Next, add your custom code
     this.option('babel'); // This method adds support for a `--babel` flag
+  }
+
+  fetchBootswatchThemes() {
+
+    return fetch("https://bootswatch.com/api/3.json")
+      .then((res) => {
+        return res.json();
+    }).then((data) => {
+        this.bootswatchThemes = _.map(data.themes, (theme) => {
+          return {name: theme.name, value: theme};
+        });
+        return Promise.resolve();
+    });
+
   }
 
   initialQuestions() {
@@ -52,6 +67,11 @@ module.exports = class extends Generator {
         return (_.isString(val) && !_.isEmpty(val)) || "yeah, it won't work without this either";
       } 
     },{
+      type    : 'list',
+      name    : 'bootswatchTheme',
+      message : 'Choose a bootswatch theme',
+      choices : this.bootswatchThemes
+    },{
       type    : 'input',
       name    : 'googleFont',
       message : 'Specify a google font family',
@@ -62,16 +82,11 @@ module.exports = class extends Generator {
   }
 
   createReactApp() {
-    this.spawnCommandSync('create-react-app', ['.']);
-    
+    this.spawnCommandSync('create-react-app && rm src/index.* src/App.* .gitignore public/index.html', ['.']);
   }
 
-
   writing() {
-    this.fs.delete(this.destinationPath('src/index.*'))
-    this.fs.delete(this.destinationPath('src/App.**'))
-    this.fs.delete(this.destinationPath('.gitignore'))
-    this.fs.delete(this.destinationPath('public/index.html'))
+    
     this.fs.copy(
       this.templatePath('**/*'),
       this.destinationPath(''),
@@ -88,30 +103,11 @@ module.exports = class extends Generator {
         }
       }
     );
-    // this.fs.copy(
-    //   this.templatePath('src/App.*'),
-    //   this.destinationPath('src')
-    // );
-    // this.fs.copy(
-    //   this.templatePath('src/firebase.js'),
-    //   this.destinationPath('src/firebase.js')
-    // );
-    // this.fs.copy(
-    //   this.templatePath('src/configureStore.js'),
-    //   this.destinationPath('src/configureStore.js')
-    // );
-    // this.fs.copy(
-    //   this.templatePath('public/*'),
-    //   this.destinationPath('public')
-    // );
-    // this.fs.copy(
-    //   this.templatePath('.gitignore'),
-    //   this.destinationPath('.gitignore')
-    // );
+    
     this.fs.copyTpl(
       this.templatePath('public/index.html'),
       this.destinationPath('public/index.html'),
-      { appname: this.appname, googleFont: this.googleFont }
+      { appname: this.appname, googleFont: this.googleFont, bootswatchTheme: this.bootswatchTheme.cssCdn }
     );
     this.fs.copyTpl(
       this.templatePath('src/index.css'),
@@ -149,19 +145,22 @@ module.exports = class extends Generator {
     );
   }
 
+  
+
   installDeps() {
     this.yarnInstall([
       'bootstrap@4.0.0-alpha.6',
       'firebase@4.3.1',
       'lodash@4.17.4',
       'moment@2.18.1',
-      'react@15.6.1',
+      'react@^15.6.2',
       'query-string@5.0.0',
+      'react-dom@^15.6.1',
       'react-redux@5.0.6',
       'react-router@4.2.0',
       'react-router-dom@4.2.2',
       'react-scripts',
-      'react-transition-group@2.2.0',
+      'react-transition-group@^1.1.2',
       'reactstrap@4.8.0',
       'redux@3.7.2',
       'redux-form@7.0.4',
