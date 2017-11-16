@@ -30,9 +30,9 @@ module.exports = class extends Generator {
       .then((res) => {
         return res.json();
     }).then((data) => {
-        this.bootswatchThemes = _.map(data.themes, (theme) => {
-          return {name: theme.name, value: theme};
-        });
+        this.bootswatchThemes = _.concat(['None'], _.map(data.themes, (theme) => {
+          return theme.name;
+        }));
         return Promise.resolve();
     });
 
@@ -71,18 +71,20 @@ module.exports = class extends Generator {
       name    : 'bootswatchTheme',
       message : 'Choose a bootswatch theme',
       choices : this.bootswatchThemes
-    },{
-      type    : 'input',
-      name    : 'googleFont',
-      message : 'Specify a google font family',
-      default : 'Nunito'
-    }]).then((answers) => {
+    }
+    // ,{
+    //   type    : 'input',
+    //   name    : 'googleFont',
+    //   message : 'Specify a google font family',
+    //   default : 'Nunito'
+    // }
+    ]).then((answers) => {
       _.each(answers, (answer, key) => { this[key] = answer });
     });
   }
 
   createReactApp() {
-    this.spawnCommandSync('create-react-app && rm src/index.* src/App.* .gitignore public/index.html', ['.']);
+    this.spawnCommandSync('create-react-app', ['.']);
   }
 
   writing() {
@@ -103,11 +105,13 @@ module.exports = class extends Generator {
         }
       }
     );
+
+    let cssImport = this.bootswatchTheme.name === 'None' ? 'bootstrap/dist/css/bootstrap.css' : `bootswatch/${this.bootswatchTheme.name}/bootstrap.css`
     
     this.fs.copyTpl(
       this.templatePath('public/index.html'),
       this.destinationPath('public/index.html'),
-      { appname: this.appname, googleFont: this.googleFont, bootswatchTheme: this.bootswatchTheme.cssCdn }
+      { appname: this.appname, googleFont: this.googleFont, cssImport }
     );
     this.fs.copyTpl(
       this.templatePath('src/index.css'),
@@ -150,6 +154,7 @@ module.exports = class extends Generator {
   installDeps() {
     this.yarnInstall([
       'bootstrap@4.0.0-alpha.6',
+      'thomaspark/bootswatch#v4.0.0-alpha.6',
       'firebase@4.3.1',
       'lodash@4.17.4',
       'moment@2.18.1',

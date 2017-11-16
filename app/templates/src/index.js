@@ -4,7 +4,7 @@ import App from './App';
 import { Provider } from 'react-redux';
 import store from './configureStore';
 import {HANDLE_SIGNED_IN, HANDLE_SIGNED_OUT} from './actions/auth';
-import 'bootstrap/dist/css/bootstrap.css';
+import '<%= cssImport %>';
 import './index.css';
 import registerServiceWorker from './registerServiceWorker';
 import firebase from './firebase';

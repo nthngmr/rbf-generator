@@ -15,5 +15,9 @@
     "mkdirp": "^0.5.1",
     "node-fetch": "^1.7.3",
     "yeoman-generator": "^2.0.0"
-  }
+  },
+  "files": [
+    "app",
+    "model"
+  ]
 }
