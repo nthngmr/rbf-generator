@@ -8,10 +8,11 @@ class IndexPage extends Component {
 
     let gettingStarted = (
       <Row className="getting-started">
-        <Col md={{size: 8, offset: 2}}>
+        <Col>
           <Row>
             <Col style={{marginBottom: '50px', marginTop: '100px'}}>
-              <h3>Getting Started with <font className="main-logo"><%= appname %></font></h3>
+              <h5>Welcome to</h5> 
+              <h2><%= appname %></h2>
             </Col>
           </Row>
           <Row>
@@ -26,7 +27,7 @@ class IndexPage extends Component {
     return (
       <Container className="IndexPage">
         <Row>
-          <Col sm="12" md={{ size: 8, offset: 2 }}>
+          <Col sm="12" md={{ size: 12 }}>
             {gettingStarted}
           </Col>
         </Row>

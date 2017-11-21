@@ -3,6 +3,7 @@ import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem, NavLink, Dropdown, DropdownItem, DropdownToggle, DropdownMenu} from 'reactstrap';
 import { signOut } from './../actions/auth';
+import _ from 'lodash';
 import './MainNav.css';
 
 class MainNav extends React.Component {
@@ -44,15 +45,13 @@ class MainNav extends React.Component {
 
 
     return (
-      <Navbar className="MainNav" color="primary" inverse toggleable fixed="top">
-        <NavbarToggler right onClick={this.toggleNavbar} />
-        
-          <NavbarBrand className="main-logo" to={`${process.env.PUBLIC_URL}/`} tag={Link}>
-            <%= appname %>
-          </NavbarBrand>
-        
+      <Navbar className="MainNav" dark color='primary' expand="sm" fixed="top">
+        <NavbarBrand className="main-logo" to={`${process.env.PUBLIC_URL}/`} tag={Link}>
+          <%= appname %>
+        </NavbarBrand>
+        <NavbarToggler onClick={this.toggleNavbar} className="mr-2" />
         <Collapse isOpen={this.state.navbarIsOpen} navbar>
-          <Nav navbar className="bg-primary">
+          <Nav navbar>
             <NavItem>
               <NavLink tag={Link} onClick={this.closeNavbar} to={`${process.env.PUBLIC_URL}/`}>
                 home
@@ -77,7 +76,7 @@ class MainNav extends React.Component {
           <Nav className="ml-auto" navbar>
             <Dropdown isOpen={this.state.userDropdownIsOpen} toggle={this.toggleUserDropdown}>
               <DropdownToggle nav>
-                <img className="avatar" alt="avatar" src={this.props.user.photoURL || `${process.env.PUBLIC_URL}/user-icon.png`} />
+                <img className="avatar" alt="avatar" src={_.get(this.props, 'user.info.photoUrl', `${process.env.PUBLIC_URL}/user-icon.png`)} />
               </DropdownToggle>            
               <DropdownMenu className="user-dropdown" >
                 <DropdownItem onClick={ () => { this.props.history.push('/settings') } }>

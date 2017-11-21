@@ -20,23 +20,22 @@ module.exports = class extends Generator {
     this.log('folder name', this.options.foldername);
     this.destinationRoot(this.options.foldername);
 
-    // Next, add your custom code
     this.option('babel'); // This method adds support for a `--babel` flag
   }
 
-  fetchBootswatchThemes() {
+  // fetchBootswatchThemes() {
 
-    return fetch("https://bootswatch.com/api/3.json")
-      .then((res) => {
-        return res.json();
-    }).then((data) => {
-        this.bootswatchThemes = _.concat(['None'], _.map(data.themes, (theme) => {
-          return theme.name;
-        }));
-        return Promise.resolve();
-    });
+  //   return fetch("https://bootswatch.com/api/3.json")
+  //     .then((res) => {
+  //       return res.json();
+  //   }).then((data) => {
+  //       this.bootswatchThemes = _.concat(['None'], _.map(data.themes, (theme) => {
+  //         return theme.name;
+  //       }));
+  //       return Promise.resolve();
+  //   });
 
-  }
+  // }
 
   initialQuestions() {
     return this.prompt([{
@@ -66,11 +65,6 @@ module.exports = class extends Generator {
       validate : (val) => {
         return (_.isString(val) && !_.isEmpty(val)) || "yeah, it won't work without this either";
       } 
-    },{
-      type    : 'list',
-      name    : 'bootswatchTheme',
-      message : 'Choose a bootswatch theme',
-      choices : this.bootswatchThemes
     }
     // ,{
     //   type    : 'input',
@@ -153,20 +147,19 @@ module.exports = class extends Generator {
 
   installDeps() {
     this.yarnInstall([
-      'bootstrap@4.0.0-alpha.6',
-      'thomaspark/bootswatch#v4.0.0-alpha.6',
-      'firebase@4.3.1',
+      'bootstrap@^4.0.0-beta',
+      'firebase@^4.6.2',
       'lodash@4.17.4',
       'moment@2.18.1',
-      'react@^15.6.2',
       'query-string@5.0.0',
-      'react-dom@^15.6.1',
+      'react@^16.1.1',
+      'react-dom@^16.1.1',
       'react-redux@5.0.6',
       'react-router@4.2.0',
       'react-router-dom@4.2.2',
       'react-scripts',
       'react-transition-group@^1.1.2',
-      'reactstrap@4.8.0',
+      'reactstrap@next',
       'redux@3.7.2',
       'redux-form@7.0.4',
       'redux-logger@3.0.6',

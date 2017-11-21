@@ -76,14 +76,14 @@ export const signUpWithEmail = (email, password, passwordConfirmation) => {
 }
 
 function saveUserInfo(user) {
-  let userInfo = {
+  let info = {
     name: user.displayName,
     email: user.email,
     photoUrl: user.photoURL,
     emailVerified: user.emailVerified,
     uid: user.uid
   }
-  return firebase.database().ref(`users/${user.uid}/info`).set(userInfo);
+  return firebase.firestore().doc(`users/${user.uid}`).set({info});
 }
 
 export const signOut = (id) => {
