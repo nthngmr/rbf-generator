@@ -16,9 +16,11 @@ module.exports = class extends Generator {
     // Calling the super constructor is important so our generator is correctly set up
     super(args, opts);
 
-    this.argument('foldername', { type: String, required: true });
+    this.argument('foldername', { type: String, required: false });
     this.log('folder name', this.options.foldername);
     this.destinationRoot(this.options.foldername);
+    mkdirp.sync(this.destinationPath(`${this.options.foldername}-web`));
+    this.destinationRoot(`${this.options.foldername}-web`);
 
     this.option('babel'); // This method adds support for a `--babel` flag
   }
@@ -42,7 +44,10 @@ module.exports = class extends Generator {
       type    : 'input',
       name    : 'appname',
       message : 'Your project name',
-      default : this.options.foldername // Default to current folder name
+      default : this.options.foldername, // Default to current folder name
+      validate : (val) => {
+        return _.isString(val);
+      } 
     },{
       type    : 'input',
       name    : 'firebaseSlug',
@@ -65,7 +70,12 @@ module.exports = class extends Generator {
       validate : (val) => {
         return (_.isString(val) && !_.isEmpty(val)) || "yeah, it won't work without this either";
       } 
+    },{
+      type    : 'confirm',
+      name    : 'includeNative',
+      message : 'Create native app project as well?'
     }
+
     // ,{
     //   type    : 'input',
     //   name    : 'googleFont',
@@ -77,11 +87,14 @@ module.exports = class extends Generator {
     });
   }
 
+
+
   createReactApp() {
+  
     this.spawnCommandSync('create-react-app', ['.']);
   }
 
-  writing() {
+  copyFiles() {
     
     this.fs.copy(
       this.templatePath('**/*'),
@@ -100,12 +113,11 @@ module.exports = class extends Generator {
       }
     );
 
-    let cssImport = this.bootswatchTheme.name === 'None' ? 'bootstrap/dist/css/bootstrap.css' : `bootswatch/${this.bootswatchTheme.name}/bootstrap.css`
     
     this.fs.copyTpl(
       this.templatePath('public/index.html'),
       this.destinationPath('public/index.html'),
-      { appname: this.appname, googleFont: this.googleFont, cssImport }
+      { appname: this.appname, googleFont: this.googleFont }
     );
     this.fs.copyTpl(
       this.templatePath('src/index.css'),
@@ -143,28 +155,34 @@ module.exports = class extends Generator {
     );
   }
 
-  
-
   installDeps() {
     this.yarnInstall([
       'bootstrap@^4.0.0-beta',
       'firebase@^4.6.2',
-      'lodash@4.17.4',
-      'moment@2.18.1',
-      'query-string@5.0.0',
+      'lodash@^4.17.4',
+      'moment@^2.18.1',
+      'query-string@^5.0.0',
       'react@^16.1.1',
       'react-dom@^16.1.1',
-      'react-redux@5.0.6',
-      'react-router@4.2.0',
-      'react-router-dom@4.2.2',
+      'react-redux@^5.0.6',
+      'react-router@^4.2.0',
+      'react-router-dom@^4.2.2',
       'react-scripts',
       'react-transition-group@^1.1.2',
       'reactstrap@next',
-      'redux@3.7.2',
-      'redux-form@7.0.4',
-      'redux-logger@3.0.6',
-      'redux-thunk@2.2.0'
+      'redux@^3.7.2',
+      'redux-form@^7.0.4',
+      'redux-logger@^3.0.6',
+      'redux-thunk@^2.2.0'
     ]);
+  }
+
+  createReactNativeApp() {
+    if (this.includeNative) {
+      this.destinationRoot('..');
+      this.composeWith(require.resolve('../native-app'), {arguments: [this.options.foldername]});
+      
+    }
   }
 
 

@@ -23,23 +23,4 @@ ReactDOM.render(
 
 registerServiceWorker();
 
-firebase.auth().onAuthStateChanged(function(user) {
-  if (user) {
-    firebase.firestore()
-      .doc(`users/${user.uid}`)
-      .get()
-      .then((doc) => {
-        store.dispatch({
-          type: HANDLE_SIGNED_IN, 
-          user: doc.data(),
-          uid: user.uid,
-          photoUrl: user.photoUrl
-        });
-      })
-  } else {
-    store.dispatch({
-      type: HANDLE_SIGNED_OUT
-    });
-  }
-});
 
