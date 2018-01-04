@@ -65,10 +65,12 @@ module.exports = class extends Generator {
               console.log("chose firebase: ", answers.currentFirebase);
               self.appname = answers.currentFirebase.name;
               self.firebaseSlug = answers.currentFirebase.id;
-              return firebaseTools.init('firestore').then(() => { return currentFirebase });
+              console.log("self.destinationRoot()", self.destinationRoot());
+              return firebaseTools.init('firestore', {cwd: self.destinationRoot()}).then((blah) => { return answers.currentFirebase });
             })
             .then((currentFirebase) => {
-              return firebaseTools.use(currentFirebase);
+              console.log('currentFirebase', currentFirebase)
+              return firebaseTools.use({project: currentFirebase.id}, {projectRoot: self.destinationRoot()});
             })
             .then(firebaseTools.setup.web)
             .then((setup) => {
