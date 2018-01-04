@@ -17,29 +17,24 @@ module.exports = class extends Generator {
     super(args, opts);
 
     this.argument('foldername', { type: String, required: false });
+    console.log("_.isUndefined(this.options.foldername", _.isUndefined(this.options.foldername), "this.determineAppname()", this.determineAppname())
+    if (_.isUndefined(this.options.foldername)) {
+      this.options.foldername = this.determineAppname();
+    } else {
+      this.destinationRoot(this.options.foldername);
+    }
     this.log('folder name', this.options.foldername);
-    this.destinationRoot(this.options.foldername);
     mkdirp.sync(this.destinationPath(`${this.options.foldername}-web`));
     this.destinationRoot(`${this.options.foldername}-web`);
 
     this.option('babel'); // This method adds support for a `--babel` flag
   }
 
-  // fetchBootswatchThemes() {
+  configure() {
 
-  //   return fetch("https://bootswatch.com/api/3.json")
-  //     .then((res) => {
-  //       return res.json();
-  //   }).then((data) => {
-  //       this.bootswatchThemes = _.concat(['None'], _.map(data.themes, (theme) => {
-  //         return theme.name;
-  //       }));
-  //       return Promise.resolve();
-  //   });
+  }
 
-  // }
-
-  initialQuestions() {
+  prompting() {
     return this.prompt([{
       type    : 'input',
       name    : 'appname',
@@ -47,7 +42,7 @@ module.exports = class extends Generator {
       default : this.options.foldername, // Default to current folder name
       validate : (val) => {
         return _.isString(val);
-      } 
+      }
     },{
       type    : 'input',
       name    : 'firebaseSlug',
@@ -55,25 +50,21 @@ module.exports = class extends Generator {
       default : `${this.options.foldername}-web`,
       validate : (val) => {
         return _.isString(val);
-      } 
+      }
     },{
       type    : 'input',
       name    : 'firebaseApiKey',
       message : 'Your firebase API key for this app (required)',
       validate : (val) => {
         return (_.isString(val) && !_.isEmpty(val)) || "Seriously, the app won't work without this";
-      } 
+      }
     },{
       type    : 'input',
       name    : 'firebaseMessagingSenderId',
       message : 'Your firebase messaging sender ID for this app (required)',
       validate : (val) => {
         return (_.isString(val) && !_.isEmpty(val)) || "yeah, it won't work without this either";
-      } 
-    },{
-      type    : 'confirm',
-      name    : 'includeNative',
-      message : 'Create native app project as well?'
+      }
     }
 
     // ,{
@@ -87,15 +78,15 @@ module.exports = class extends Generator {
     });
   }
 
-
-
   createReactApp() {
-  
+
+
+
     this.spawnCommandSync('create-react-app', ['.']);
   }
 
-  copyFiles() {
-    
+  writing() {
+
     this.fs.copy(
       this.templatePath('**/*'),
       this.destinationPath(''),
@@ -113,7 +104,7 @@ module.exports = class extends Generator {
       }
     );
 
-    
+
     this.fs.copyTpl(
       this.templatePath('public/index.html'),
       this.destinationPath('public/index.html'),
@@ -147,7 +138,7 @@ module.exports = class extends Generator {
     this.fs.copyTpl(
       this.templatePath('src/firebase.js'),
       this.destinationPath('src/firebase.js'),
-      { 
+      {
         firebaseSlug: this.firebaseSlug,
         firebaseApiKey: this.firebaseApiKey,
         firebaseMessagingSenderId: this.firebaseMessagingSenderId
@@ -155,7 +146,7 @@ module.exports = class extends Generator {
     );
   }
 
-  installDeps() {
+  install() {
     this.yarnInstall([
       'bootstrap@^4.0.0-beta',
       'firebase@^4.6.2',
@@ -177,13 +168,7 @@ module.exports = class extends Generator {
     ]);
   }
 
-  createReactNativeApp() {
-    if (this.includeNative) {
-      this.destinationRoot('..');
-      this.composeWith(require.resolve('../native-app'), {arguments: [this.options.foldername]});
-      
-    }
-  }
+
 
 
 };

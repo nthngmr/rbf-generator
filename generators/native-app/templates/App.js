@@ -57,7 +57,7 @@ firebase
           .get()
           .then((doc) => {
             store.dispatch({
-              type: HANDLE_SIGNED_IN, 
+              type: HANDLE_SIGNED_IN,
               user: _.merge(doc.data(), {uid: user.uid})
             });
           })

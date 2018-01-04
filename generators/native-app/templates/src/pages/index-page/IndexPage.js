@@ -16,7 +16,11 @@ class IndexPage extends Component {
           <Body>
             <Title><%= appname %></Title>
           </Body>
-          <Right />
+          <Right>
+            <Button onPress={this.props.signOut} transparent>
+              <Icon name='ios-log-out-outline' />
+            </Button>
+          </Right>
         </Header>
         <Content padder>
           <View style={{
@@ -26,8 +30,10 @@ class IndexPage extends Component {
             alignItems: 'center',
             paddingTop: 200
           }}>
-            <H2>Welcome to</H2>
-            <H1><%= appname %></H1>
+            <View>
+              <H2>Welcome to</H2>
+              <H1><%= appname %></H1>
+            </View>
           </View>
         </Content>
       </Container>
