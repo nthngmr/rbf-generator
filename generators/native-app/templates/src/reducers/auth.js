@@ -20,7 +20,6 @@ const auth = (state = initialState, action) => {
     case HANDLE_SIGNED_IN:
       return {
         status: 'authenticated',
-        token: action.token,
         user: action.user
       };
     case HANDLE_SIGNING_OUT:

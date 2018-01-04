@@ -8,7 +8,7 @@ import AuthPageContainer from './src/pages/auth-page/AuthPageContainer';
 import {connect} from 'react-redux';
 import firebase from './src/firebase';
 import _ from 'lodash';
-import { Container, Content, Header, StyleProvider } from 'native-base';
+import { Container, Content, Header, StyleProvider, Spinner } from 'native-base';
 import getTheme from './native-base-theme/components';
 import platform from './native-base-theme/variables/platform';
 const styles = StyleSheet.create({
@@ -23,12 +23,13 @@ const styles = StyleSheet.create({
 
 class Switcher extends React.Component {
   render() {
-    return this.props.userID ? <IndexPageContainer/> : <AuthPageContainer/>
+    return this.props.userID ? <IndexPageContainer/> : (this.props.pending ? <Spinner style={{marginTop: 200}}/> : <AuthPageContainer/>)
   }
 }
 
 const SwitcherContainer = connect((state) => ({
-  userID: _.get(state, 'auth.user.uid')
+  userID: _.get(state, 'auth.user.uid'),
+  pending: _.get(state, 'auth.status') === 'pending'
 }),
 (dispatch) => ({
   dispatch
@@ -45,24 +46,29 @@ export default class App extends React.Component {
 }
 
 
-
-
-firebase.auth().onAuthStateChanged(function(user) {
-  if (user) {
-    firebase.firestore()
-      .doc(`users/${user.uid}`)
-      .get()
-      .then((doc) => {
+firebase
+  .auth()
+  .setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+  .then(() => {
+    firebase.auth().onAuthStateChanged(function(user) {
+      if (user) {
+        firebase.firestore()
+          .doc(`users/${user.uid}`)
+          .get()
+          .then((doc) => {
+            store.dispatch({
+              type: HANDLE_SIGNED_IN, 
+              user: _.merge(doc.data(), {uid: user.uid})
+            });
+          })
+      } else {
         store.dispatch({
-          type: HANDLE_SIGNED_IN, 
-          user: doc.data(),
-          uid: user.uid,
-          photoUrl: user.photoUrl
+          type: HANDLE_SIGNED_OUT
         });
-      })
-  } else {
-    store.dispatch({
-      type: HANDLE_SIGNED_OUT
+      }
     });
-  }
-});
+  })
+  .catch(function(error) {
+    console.log("Firebase Auth Error: ", error.message);
+  });
+

@@ -1,7 +1,5 @@
-import firebase from '@firebase/app';
-import '@firebase/firestore'
-import '@firebase/auth'
-
+import firebase from 'firebase';
+import '@firebase/firestore';
 
 firebase.initializeApp({
   apiKey: "<%= firebaseApiKey %>",

@@ -37,7 +37,8 @@ module.exports = class extends Generator {
       {
         globOptions: {
           ignore: [
-            this.templatePath('firebase.js')
+            this.templatePath('firebase.js'),
+            this.templatePath('src/page/index-page/IndexPage.js')
           ]
         }
       }
@@ -47,6 +48,11 @@ module.exports = class extends Generator {
       this.templatePath('.firebaserc'),
       this.destinationPath('.firebaserc'),
       { firebaseSlug: this.firebaseSlug }
+    );
+    this.fs.copyTpl(
+      this.templatePath('src/pages/index-page/IndexPage.js'),
+      this.destinationPath('src/pages/index-page/IndexPage.js'),
+      { appname: this.appname }
     );
     this.fs.copyTpl(
       this.templatePath('src/firebase.js'),
