@@ -8,7 +8,8 @@ const extend = require('deep-extend');
 const mkdirp = require('mkdirp');
 const https = require("https");
 const fetch = require("node-fetch");
-
+const opn = require('opn');
+const firebaseTools = require('firebase-tools');
 
 module.exports = class extends Generator {
   // The name `constructor` is important here
@@ -18,28 +19,84 @@ module.exports = class extends Generator {
 
     this.argument('foldername', { type: String, required: false });
     console.log("_.isUndefined(this.options.foldername", _.isUndefined(this.options.foldername), "this.determineAppname()", this.determineAppname())
+
+
+    this.option('babel'); // This method adds support for a `--babel` flag
+
+
+  }
+
+  initializing() {
     if (_.isUndefined(this.options.foldername)) {
       this.options.foldername = this.determineAppname();
+      this.firebaseSlug = `${this.options.foldername}-web`;
     } else {
       this.destinationRoot(this.options.foldername);
     }
+    this.appname = this.options.foldername;
     this.log('folder name', this.options.foldername);
     mkdirp.sync(this.destinationPath(`${this.options.foldername}-web`));
     this.destinationRoot(`${this.options.foldername}-web`);
 
-    this.option('babel'); // This method adds support for a `--babel` flag
-  }
+    let done = this.async();
 
-  configure() {
+    let self = this;
+
+    let needFirebase = () => {
+      this.prompt([{
+        type    : 'confirm',
+        name    : 'existingFirebase',
+        message : 'Have you created an app in Firebase yet?'
+      }]).then((answers) => {
+        if (answers.existingFirebase) {
+          firebaseTools.list()
+            .then((data) => {
+              return this.prompt([{
+                type    : 'list',
+                name    : 'currentFirebase',
+                message : 'Choose the app from the following list:',
+                choices : _.map(data, (firebase) => { return _.merge(firebase, {value: firebase}) })
+              }])
+            })
+            .catch((err) => {
+              console.log('firebaseTools.list error', err)
+            })
+            .then((answers) => {
+              console.log("chose firebase: ", answers.currentFirebase);
+              self.appname = answers.currentFirebase.name;
+              self.firebaseSlug = answers.currentFirebase.id;
+              return firebaseTools.init('firestore').then(() => { return currentFirebase });
+            })
+            .then((currentFirebase) => {
+              return firebaseTools.use(currentFirebase);
+            })
+            .then(firebaseTools.setup.web)
+            .then((setup) => {
+              console.log('setup', setup, arguments)
+              done(null);
+            }).catch((err) => {
+              console.log('firebaseTools.setup.web error', err)
+            });
+        } else {
+          opn('https://console.firebase.google.com/', {wait:false}).then(() => {
+            console.log("Create a firebase and return back here", answers.existingFirebase);
+            needFirebase();
+          })
+        }
+      });
+    }
+
+    needFirebase();
 
   }
 
   prompting() {
+    console.log('prompting', arguments);
     return this.prompt([{
       type    : 'input',
       name    : 'appname',
       message : 'Your project name',
-      default : this.options.foldername, // Default to current folder name
+      default : this.appname, // Default to current folder name
       validate : (val) => {
         return _.isString(val);
       }
@@ -47,7 +104,7 @@ module.exports = class extends Generator {
       type    : 'input',
       name    : 'firebaseSlug',
       message : 'Your firebase app slug',
-      default : `${this.options.foldername}-web`,
+      default : this.firebaseSlug,
       validate : (val) => {
         return _.isString(val);
       }
@@ -79,8 +136,6 @@ module.exports = class extends Generator {
   }
 
   createReactApp() {
-
-
 
     this.spawnCommandSync('create-react-app', ['.']);
   }
