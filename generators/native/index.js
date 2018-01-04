@@ -8,7 +8,7 @@ const extend = require('deep-extend');
 const mkdirp = require('mkdirp');
 const https = require("https");
 const fetch = require("node-fetch");
-
+const firebasePrompter = require('./../../lib/firebasePrompter');
 
 module.exports = class extends Generator {
   // The name `constructor` is important here
@@ -18,21 +18,28 @@ module.exports = class extends Generator {
 
     this.argument('foldername', { type: String, required: false });
 
-    if (_.isUndefined(this.options.foldername)) {
-      this.options.foldername = this.determineAppname();
-    } else {
-      this.destinationRoot(this.options.foldername);
-    }
-    this.log('folder name', this.options.foldername);
-    mkdirp.sync(this.destinationPath(`${this.options.foldername}-native`));
-    this.destinationRoot(`${this.options.foldername}-native`);
+    this.currentFirebase = opts.currentFirebase;
 
     this.option('babel'); // This method adds support for a `--babel` flag
   }
 
+  initializing() {
 
-  createReactNativeApp() {
-    this.spawnCommandSync('create-react-native-app', ['.']);
+    if (_.isUndefined(this.options.foldername)) {
+      this.options.foldername = this.determineAppname();
+      this.appname = this.options.foldername;
+    }
+
+    mkdirp.sync(this.destinationPath(`${this.options.foldername}-native`));
+    this.destinationRoot(`${this.options.foldername}-native`);
+
+    if (this.currentFirebase) {
+      this.appname = this.currentFirebase.name;
+    } else {
+      let done = this.async();
+      firebasePrompter(this, done);
+    }
+
   }
 
   prompting() {
@@ -40,43 +47,19 @@ module.exports = class extends Generator {
       type    : 'input',
       name    : 'appname',
       message : 'Your project name',
-      default : this.options.foldername, // Default to current folder name
+      default : this.appname, // Default to current folder name
       validate : (val) => {
         return _.isString(val);
-      }
-    },{
-      type    : 'input',
-      name    : 'firebaseSlug',
-      message : 'Your firebase app slug',
-      default : `${this.options.foldername}-web`,
-      validate : (val) => {
-        return _.isString(val);
-      }
-    },{
-      type    : 'input',
-      name    : 'firebaseApiKey',
-      message : 'Your firebase API key for this app (required)',
-      validate : (val) => {
-        return (_.isString(val) && !_.isEmpty(val)) || "Seriously, the app won't work without this";
-      }
-    },{
-      type    : 'input',
-      name    : 'firebaseMessagingSenderId',
-      message : 'Your firebase messaging sender ID for this app (required)',
-      validate : (val) => {
-        return (_.isString(val) && !_.isEmpty(val)) || "yeah, it won't work without this either";
       }
     }
-
-    // ,{
-    //   type    : 'input',
-    //   name    : 'googleFont',
-    //   message : 'Specify a google font family',
-    //   default : 'Nunito'
-    // }
     ]).then((answers) => {
       _.each(answers, (answer, key) => { this[key] = answer });
     });
+  }
+
+
+  createReactNativeApp() {
+    this.spawnCommandSync('create-react-native-app', ['.']);
   }
 
   writing() {
@@ -103,9 +86,9 @@ module.exports = class extends Generator {
       this.templatePath('src/firebase.js'),
       this.destinationPath('src/firebase.js'),
       {
-        firebaseSlug: this.firebaseSlug,
-        firebaseApiKey: this.firebaseApiKey,
-        firebaseMessagingSenderId: this.firebaseMessagingSenderId
+        firebaseSlug: this.currentFirebase.projectId,
+        firebaseApiKey: this.currentFirebase.apiKey,
+        firebaseMessagingSenderId: this.currentFirebase.messagingSenderId
       }
     );
   }
@@ -125,12 +108,12 @@ module.exports = class extends Generator {
       'redux-form@^7.0.4',
       'redux-logger@^3.0.6',
       'redux-thunk@^2.2.0'
-    ]);
+    ]).then(() => {
+      this.log('Complete! Run the following command to get started: \n\n node node_modules/native-base/ejectTheme.js && yarn start');
+    })
   }
 
-  end() {
-    this.spawnCommandSync('node node_modules/native-base/ejectTheme.js', ['.']);
-  }
+
 
 
 };
