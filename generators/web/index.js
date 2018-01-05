@@ -13,13 +13,15 @@ const firebasePrompter = require('./../../lib/firebasePrompter');
 module.exports = class extends Generator {
   // The name `constructor` is important here
   constructor(args, opts) {
+    opts.force = true;
     // Calling the super constructor is important so our generator is correctly set up
     super(args, opts);
+
+    this.conflicter.force = true;
 
     this.argument('foldername', { type: String, required: false });
 
     this.option('babel'); // This method adds support for a `--babel` flag
-
   }
 
   initializing() {
@@ -29,9 +31,11 @@ module.exports = class extends Generator {
       this.appname = this.options.foldername;
     }
 
-    mkdirp.sync(this.destinationPath(`${this.options.foldername}-web`));
-    this.destinationRoot(`${this.options.foldername}-web`);
+    this.currentFirebase = this.options.currentFirebase;
 
+    if (this.config.get('firebase')) {
+      this.currentFirebase = this.config.get('firebase');
+    }
     if (this.currentFirebase) {
       this.appname = this.currentFirebase.name;
     } else {
@@ -39,25 +43,33 @@ module.exports = class extends Generator {
       firebasePrompter(this, done);
     }
 
+    mkdirp.sync(this.destinationPath(`${this.options.foldername}-web`));
+    this.destinationRoot(`${this.options.foldername}-web`);
+
+
   }
 
   prompting() {
-    return this.prompt([{
-      type    : 'input',
-      name    : 'appname',
-      message : 'Your project name',
-      default : this.appname, // Default to current folder name
-      validate : (val) => {
-        return _.isString(val);
+    this.config.set('firebase', this.currentFirebase);
+    if (!this.appname) {
+      return this.prompt([{
+        type    : 'input',
+        name    : 'appname',
+        message : 'Your project name',
+        default : this.appname, // Default to current folder name
+        validate : (val) => {
+          return _.isString(val);
+        }
       }
+      ]).then((answers) => {
+        _.each(answers, (answer, key) => { this[key] = answer });
+        this.config.set('appname', this.appname);
+      });
     }
-    ]).then((answers) => {
-      _.each(answers, (answer, key) => { this[key] = answer });
-    });
+
   }
 
   createReactApp() {
-
     this.spawnCommandSync('create-react-app', ['.']);
   }
 
@@ -142,10 +154,9 @@ module.exports = class extends Generator {
       'redux-logger@^3.0.6',
       'redux-thunk@^2.2.0'
     ]).then(() => {
-      this.log('Complete! Run the following command to get started: \n\n yarn start');
+      this.spawnCommandSync('yarn', ['start']);
     })
   }
-
 
 
 };
