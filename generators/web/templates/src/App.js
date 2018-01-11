@@ -13,7 +13,7 @@ import {
 } from 'react-router-dom';
 import IndexPageContainer from './pages/index-page/IndexPageContainer';
 import SettingsPageContainer from './pages/settings-page/SettingsPageContainer';
-import AuthPageContainer from './pages/auth-page/AuthPageContainer';
+import AuthPage from './pages/auth-page/AuthPage';
 
 
 class App extends Component {
@@ -28,7 +28,7 @@ class App extends Component {
         return (
           <Container fluid className="no-gutters main-container">
             {this.props.location.pathname === '/auth' ? '' : <Redirect to={`${BASEURL}/auth`} /> }
-            <Route path={`${BASEURL}/auth`} component={AuthPageContainer} />
+            <Route path={`${BASEURL}/auth`} component={AuthPage} />
           </Container>
         )
       case 'authenticated':

@@ -23,7 +23,7 @@ module.exports = class extends Generator {
 
   writing() {
 
-    let page = this.options.page[0].toUpperCase() + this.options.page.substring(1))
+    let page = this.options.page[0].toUpperCase() + this.options.page.substring(1);
    
     this.fs.copyTpl(
       this.templatePath('page.js'),
@@ -36,7 +36,7 @@ module.exports = class extends Generator {
       { page }
     );
     this.fs.copyTpl(
-      this.templatePath('styles.css'),
+      this.templatePath('container.js'),
       this.destinationPath(`src/pages/${page.toLowerCase()}-page/${page}PageContainer.js`),
       { page }
     );

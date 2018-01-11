@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import App from './App';
 import { Provider } from 'react-redux';
 import store from './configureStore';
-import {HANDLE_SIGNED_IN, HANDLE_SIGNED_OUT} from './actions/auth';
+import {actions, setFirebase} from '@nothingmore/auth';
 import 'bootstrap/dist/css/bootstrap.css';
 import './index.css';
 import registerServiceWorker from './registerServiceWorker';
@@ -11,6 +11,10 @@ import firebase from './firebase';
 import {
   BrowserRouter as Router
 } from 'react-router-dom';
+
+const {HANDLE_SIGNED_IN, HANDLE_SIGNED_OUT} = actions;
+
+setFirebase(firebase);
 
 ReactDOM.render(
   <Provider store={store}>

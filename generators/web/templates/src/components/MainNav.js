@@ -2,7 +2,7 @@ import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem, NavLink, Dropdown, DropdownItem, DropdownToggle, DropdownMenu} from 'reactstrap';
-import { signOut } from './../actions/auth';
+import { actions as authActions } from '@nothingmore/auth';
 import _ from 'lodash';
 import './MainNav.css';
 
@@ -19,7 +19,7 @@ class MainNav extends React.Component {
   signOut = (event) => {
     event.preventDefault();
     this.closeNavbar();
-    this.props.dispatch(signOut());
+    this.props.dispatch(authActions.signOut());
   }
 
   toggleNavbar = () => {

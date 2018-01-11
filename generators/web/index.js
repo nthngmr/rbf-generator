@@ -140,6 +140,7 @@ module.exports = class extends Generator {
       'firebase@^4.6.2',
       'lodash@^4.17.4',
       'moment@^2.18.1',
+      '@nothingmore/auth@^1.0.4',
       'query-string@^5.0.0',
       'react@^16.1.1',
       'react-dom@^16.1.1',

@@ -11,7 +11,7 @@ class <%= page %>Page extends Component {
       <Container className="<%= page %>Page">
         <Row>
           <Col sm="12" md={{ size: 12 }}>
-            {page}
+            <%= page %>
           </Col>
         </Row>
       </Container>
