@@ -137,7 +137,7 @@ module.exports = class extends Generator {
   install() {
     this.yarnInstall([
       'bootstrap@^4.0.0-beta',
-      'firebase@^4.6.2',
+      'firebase@^4.8.2',
       'lodash@^4.17.4',
       'moment@^2.18.1',
       '@nothingmore/auth@^1.0.4',
