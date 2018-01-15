@@ -111,6 +111,7 @@ module.exports = class extends Generator {
       'lodash@^4.17.4',
       'moment@^2.18.1',
       'native-base@^2.3.5',
+      '@nothingmore/auth@^1.0.5',
       'query-string@^5.0.0',
       'react-native-clean-form',
       'react-native-vector-icons',
