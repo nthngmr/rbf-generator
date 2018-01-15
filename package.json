@@ -1,6 +1,6 @@
 {
   "name": "@nothingmore/generator",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Nothing More yeoman app generator",
   "main": "index.js",
   "author": "marknutter@gmail.com",
