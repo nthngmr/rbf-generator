@@ -1,0 +1,37 @@
+.AuthPage {
+  padding-top: 50px;
+}
+
+.AuthPage .logo {
+  margin-bottom: 50px;
+}
+
+.AuthPage h1 {
+  text-align: center;
+  font-size: 40px;
+}
+
+.AuthPage .signUpLink {
+  font-size: 12px;
+}
+
+.AuthPage .social-signing-buttons {
+  margin-left: 20px;
+}
+
+.AuthPage .emailSignIn {
+  margin-bottom: 50px;
+  /*padding-right: 0px !important;*/
+}
+
+.AuthPage button {
+  cursor: pointer;
+}
+
+.AuthPage p.instructions {
+  text-align: center;
+  text-indent: 10px;
+  color: #888;
+  font-size: 13px;
+  margin-bottom: 10px;
+}
