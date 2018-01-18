@@ -25,12 +25,12 @@ module.exports = class extends Generator {
   }
 
   initializing() {
-
+    console.log("2 this.options.foldername", this.options.foldername, "this.determineAppname()", this.determineAppname());
     if (_.isUndefined(this.options.foldername)) {
       this.options.foldername = this.determineAppname();
       this.appname = this.options.foldername;
     }
-
+    console.log("3 this.options.foldername", this.options.foldername, "this.determineAppname()", this.determineAppname());
     this.currentFirebase = this.options.currentFirebase;
 
     if (this.config.get('firebase')) {
@@ -43,7 +43,7 @@ module.exports = class extends Generator {
       firebasePrompter(this, done);
     }
 
-    mkdirp.sync(this.destinationPath(`${this.options.foldername}-native`));
+    
     this.destinationRoot(`${this.options.foldername}-native`);
 
 

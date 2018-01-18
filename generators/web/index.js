@@ -43,7 +43,7 @@ module.exports = class extends Generator {
       firebasePrompter(this, done);
     }
 
-    mkdirp.sync(this.destinationPath(`${this.options.foldername}-web`));
+    
     this.destinationRoot(`${this.options.foldername}-web`);
 
 

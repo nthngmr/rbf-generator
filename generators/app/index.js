@@ -21,10 +21,22 @@ module.exports = class extends Generator {
 
     this.conflicter.force = true;
 
+    console.log("this.config.getAll()", this.config.getAll());
+
     this.argument('foldername', { type: String, required: false });
+    console.log("0 this.options.foldername", this.options.foldername, "this.determineAppname()", this.determineAppname());
     if (_.isUndefined(this.options.foldername)) {
       this.options.foldername = this.determineAppname();
+      console.log("1 this.options.foldername", this.options.foldername, "this.determineAppname()", this.determineAppname());
+    } else {
+      this.destinationRoot(this.options.foldername);
     }
+
+
+
+    console.log("1.5 this.options.foldername", this.options.foldername, "this.determineAppname()", this.determineAppname());
+
+    this.config.set('foldername', this.options.foldername);
 
     this.option('babel'); // This method adds support for a `--babel` flag
   }
@@ -70,6 +82,7 @@ module.exports = class extends Generator {
   }
 
   writing() {
+
     this.config.set('firebase', this.currentFirebase);
     this.config.set(this.appType, true);
   }
