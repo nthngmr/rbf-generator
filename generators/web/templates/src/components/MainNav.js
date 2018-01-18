@@ -2,7 +2,7 @@ import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem, NavLink, Dropdown, DropdownItem, DropdownToggle, DropdownMenu} from 'reactstrap';
-import { actions as authActions } from '@nothingmore/auth';
+import { signOut } from '@nothingmore/auth/actions';
 import _ from 'lodash';
 import './MainNav.css';
 
@@ -19,7 +19,7 @@ class MainNav extends React.Component {
   signOut = (event) => {
     event.preventDefault();
     this.closeNavbar();
-    this.props.dispatch(authActions.signOut());
+    this.props.dispatch(signOut());
   }
 
   toggleNavbar = () => {
@@ -71,13 +71,13 @@ class MainNav extends React.Component {
             </div>
           </Nav>
         </Collapse>
-        
+
         <Collapse navbar>
           <Nav className="ml-auto" navbar>
             <Dropdown isOpen={this.state.userDropdownIsOpen} toggle={this.toggleUserDropdown}>
               <DropdownToggle nav>
                 <img className="avatar" alt="avatar" src={_.get(this.props, 'user.info.photoUrl', `${process.env.PUBLIC_URL}/user-icon.png`)} />
-              </DropdownToggle>            
+              </DropdownToggle>
               <DropdownMenu className="user-dropdown" >
                 <DropdownItem onClick={ () => { this.props.history.push('/settings') } }>
                   settings

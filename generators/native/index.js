@@ -111,7 +111,7 @@ module.exports = class extends Generator {
       'lodash@^4.17.4',
       'moment@^2.18.1',
       'native-base@^2.3.5',
-      '@nothingmore/auth@^1.0.5',
+      '@nothingmore/auth@^1.2.0',
       'query-string@^5.0.0',
       'react-native-clean-form',
       'react-native-vector-icons',
@@ -123,7 +123,7 @@ module.exports = class extends Generator {
     ]).then(() => {
       this.config.set("native", true);
       this.spawnCommandSync('node', ['node_modules/native-base/ejectTheme.js']);
-      this.spawnCommandSync('yarn', ['start']);
+      this.spawnCommandSync('npm', ['start']);
     })
   }
 

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Container, Row, Col } from 'reactstrap';
-import { NMAuthComponent } from '@nothingmore/auth';
-import firebase from './../../firebase';
+import NMAuthComponent from '@nothingmore/auth/web/NMAuthComponent';
 import './AuthPage.css';
 
 class AuthPage extends Component {
@@ -17,10 +16,10 @@ class AuthPage extends Component {
       <Container className="AuthPage">
         <Row className="justify-content-md-center">
           <Col sm="12" md={{ size: 3}}>
-            <Row className="logo"><Col><h1><%= appname %></h1></Col></Row>
+            <Row className="logo"><Col><h1>testapp</h1></Col></Row>
             <Row>
               <Col>
-                <NMAuthComponent firebase={firebase} />
+                <NMAuthComponent />
               </Col>
             </Row>
           </Col>

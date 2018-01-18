@@ -22,7 +22,7 @@ class App extends Component {
 
 
     switch (this.props.authStatus) {
-      case 'pending': 
+      case 'pending':
         return <Container fluid className="no-gutters main-container"><Spinner useLayout="true"/></Container>
       case 'unauthenticated':
         return (
@@ -42,11 +42,11 @@ class App extends Component {
             </Container>
           </ScrollToTop>
         );
-      default: 
+      default:
         return '';
     }
 
-    
+
   }
 
 }

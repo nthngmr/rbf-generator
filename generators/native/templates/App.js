@@ -2,15 +2,20 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import store from './src/configureStore';
 import { Provider } from 'react-redux';
-import {HANDLE_SIGNED_IN, HANDLE_SIGNED_OUT} from './src/actions/auth';
 import IndexPageContainer from './src/pages/index-page/IndexPageContainer';
-import AuthPageContainer from './src/pages/auth-page/AuthPageContainer';
+import AuthPage from './src/pages/auth-page/AuthPage';
 import {connect} from 'react-redux';
 import firebase from './src/firebase';
 import _ from 'lodash';
 import { Container, Content, Header, StyleProvider, Spinner } from 'native-base';
 import getTheme from './native-base-theme/components';
 import platform from './native-base-theme/variables/platform';
+import setFirebase from '@nothingmore/auth/firebase';
+import {HANDLE_SIGNED_IN, HANDLE_SIGNED_OUT} from '@nothingmore/auth/actions';
+
+setFirebase(firebase);
+
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -18,12 +23,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingTop: 50,
     alignSelf: 'stretch'
-  },
+  }
 });
 
 class Switcher extends React.Component {
   render() {
-    return this.props.userID ? <IndexPageContainer/> : (this.props.pending ? <Spinner style={{marginTop: 200}}/> : <AuthPageContainer/>)
+    return this.props.userID ? <IndexPageContainer/> : (this.props.pending ? <Spinner style={{marginTop: 200}}/> : <AuthPage/>)
   }
 }
 
@@ -71,4 +76,3 @@ firebase
   .catch(function(error) {
     console.log("Firebase Auth Error: ", error.message);
   });
-
