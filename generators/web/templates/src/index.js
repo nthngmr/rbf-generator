@@ -26,19 +26,23 @@ ReactDOM.render(
 
 registerServiceWorker();
 
+let userRef;
+
 firebase.auth().onAuthStateChanged(function(user) {
   if (user) {
-    firebase.firestore()
-      .doc(`users/${user.uid}`)
-      .get()
-      .then((doc) => {
-        store.dispatch({
-          type: HANDLE_SIGNED_IN,
-          user: doc.data(),
-          uid: user.uid,
-          photoUrl: user.photoUrl
-        });
-      })
+    userRef = firebase.firestore().doc(`users/${user.uid}`)
+    userRef.set({info: {email: user.email}, uid: user.uid}, {merge: true})
+    .then(() => {
+      userRef.onSnapshot((doc) => {
+        if (doc.exists) {
+          let user = doc.data()
+          store.dispatch({
+            type: HANDLE_SIGNED_IN,
+            user
+          });
+        }
+      });
+    })
   } else {
     store.dispatch({
       type: HANDLE_SIGNED_OUT
