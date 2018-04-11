@@ -1,5 +1,4 @@
 .MainNav {
-  min-height: 55px;
 }
 
 
@@ -36,14 +35,9 @@
 
 .MainNav .navbar-brand {
   padding-top: 0px;
-  font-size: 30px;
+  font-size: 25px;
 }
 
-.MainNav .user-dropdown {
-  left: -110px;
-  top: 70px;
-  position: absolute !important;
-}
 
 .MainNav .brand-logo {
   width: 150px;

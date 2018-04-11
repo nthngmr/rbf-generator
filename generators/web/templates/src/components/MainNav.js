@@ -43,9 +43,8 @@ class MainNav extends React.Component {
 
   render() {
 
-
     return (
-      <Navbar className="MainNav" dark color='primary' expand="sm" fixed="top">
+      <Navbar className="MainNav" dark color='dark' expand="lg" fixed="top">
         <NavbarBrand className="main-logo" to={`${process.env.PUBLIC_URL}/`} tag={Link}>
           <%= appname %>
         </NavbarBrand>
@@ -74,11 +73,11 @@ class MainNav extends React.Component {
 
         <Collapse navbar>
           <Nav className="ml-auto" navbar>
-            <Dropdown isOpen={this.state.userDropdownIsOpen} toggle={this.toggleUserDropdown}>
+            <UncontrolledDropdown nav inNavbar isOpen={this.state.userDropdownIsOpen} toggle={this.toggleUserDropdown}>
               <DropdownToggle nav>
                 <img className="avatar" alt="avatar" src={_.get(this.props, 'user.info.photoUrl', `${process.env.PUBLIC_URL}/user-icon.png`)} />
               </DropdownToggle>
-              <DropdownMenu className="user-dropdown" >
+              <DropdownMenu className="user-dropdown dropdown-menu-sm dropdown-menu-right" >
                 <DropdownItem onClick={ () => { this.props.history.push('/settings') } }>
                   settings
                 </DropdownItem>
@@ -87,7 +86,7 @@ class MainNav extends React.Component {
                   logout
                 </DropdownItem>
               </DropdownMenu>
-            </Dropdown>
+            </UncontrolledDropdown>
           </Nav>
         </Collapse>
       </Navbar>
