@@ -154,9 +154,11 @@ module.exports = class extends Generator {
       'redux-form@^7.0.4',
       'redux-logger@^3.0.6',
       'redux-thunk@^2.2.0'
-    ]).then(() => {
-      this.spawnCommandSync('yarn', ['start']);
-    })
+    ])
+  }
+
+  end() {
+    this.spawnCommandSync('yarn', ['start']);
   }
 
 
