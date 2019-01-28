@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem, NavLink, Dropdown, DropdownItem, DropdownToggle, DropdownMenu} from 'reactstrap';
+import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem, NavLink, Dropdown, DropdownItem, DropdownToggle, DropdownMenu, UncontrolledDropdown} from 'reactstrap';
 import { signOut } from '@nothingmore/auth/actions';
 import _ from 'lodash';
 import './MainNav.css';

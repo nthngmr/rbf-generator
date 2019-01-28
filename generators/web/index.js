@@ -135,12 +135,12 @@ module.exports = class extends Generator {
   }
 
   install() {
-    this.yarnInstall([
-      'bootstrap@^4.0.0-beta',
-      'firebase@^4.8.2',
+    this.npmInstall([
+      'bootstrap@^4.2.1',
+      'firebase@^5.8.1',
       'lodash@^4.17.4',
       'moment@^2.18.1',
-      '@nothingmore/auth@^1.2.0',
+      '@nothingmore/auth@^1.4.0',
       'query-string@^5.0.0',
       'react@^16.1.1',
       'react-dom@^16.1.1',
@@ -149,16 +149,16 @@ module.exports = class extends Generator {
       'react-router-dom@^4.2.2',
       'react-scripts',
       'react-transition-group@^1.1.2',
-      'reactstrap@next',
+      'reactstrap@7.1.0',
       'redux@^3.7.2',
       'redux-form@^7.0.4',
       'redux-logger@^3.0.6',
       'redux-thunk@^2.2.0'
-    ])
+    ], {'save': true})
   }
 
   end() {
-    this.spawnCommandSync('yarn', ['start']);
+    this.spawnCommandSync('npm', ['start']);
   }
 
 

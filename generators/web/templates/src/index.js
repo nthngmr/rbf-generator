@@ -7,7 +7,7 @@ import setFirebase from '@nothingmore/auth/firebase';
 import {HANDLE_SIGNED_IN, HANDLE_SIGNED_OUT} from '@nothingmore/auth/actions';
 import 'bootstrap/dist/css/bootstrap.css';
 import './index.css';
-import registerServiceWorker from './registerServiceWorker';
+import {register} from './serviceWorker';
 import firebase from './firebase';
 import {
   BrowserRouter as Router
@@ -24,7 +24,7 @@ ReactDOM.render(
   document.getElementById('root')
 );
 
-registerServiceWorker();
+register();
 
 let userRef;
 
